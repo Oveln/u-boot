@@ -81,6 +81,18 @@
 					};
 				};
 
+				embassy_preempt {
+					description = "Embassy Preempt OS";
+					type = "firmware";
+					os = "rtos";
+					compression = "none";
+					load = /bits/ 64 <CONFIG_EMBASSY_PREEMPT_ENTRY>;
+					entry = /bits/ 64 <CONFIG_EMBASSY_PREEMPT_ENTRY>;
+
+					embassy_preempt_blob: embassy_preempt {
+					};
+				};
+
 #if !defined(CONFIG_OF_BOARD) || defined(CONFIG_MULTI_DTB_FIT)
 				@fdt-SEQ {
 					fit,operation = "gen-fdt-nodes";
@@ -106,15 +118,15 @@
 					firmware = "opensbi";
 #ifdef CONFIG_OPTEE
 #ifdef CONFIG_SPL_LOAD_FIT_OPENSBI_OS_BOOT
-					loadables = "linux", "tee";
+					loadables = "linux", "tee", "embassy_preempt";
 #else
-					loadables = "uboot", "tee";
+					loadables = "uboot", "tee", "embassy_preempt";
 #endif
 #else /* !CONFIG_OPTEEE */
 #ifdef CONFIG_SPL_LOAD_FIT_OPENSBI_OS_BOOT
-					loadables = "linux";
+					loadables = "linux", "embassy_preempt";
 #else
-					loadables = "uboot";
+					loadables = "uboot", "embassy_preempt";
 #endif
 #endif /* CONFIG_OPTEE */
 

@@ -624,4 +624,12 @@ config SPL_OPTEE_LOAD_ADDR
 	help
 	  Load address of the OP-TEE binary.
 
+config EMBASSY_PREEMPT_ENTRY
+	hex "Embassy Preempt RTOS entry point address"
+	default 0x80400000
+	help
+	  Entry point address for the Embassy Preempt RTOS that runs on HART0.
+	  This RTOS is loaded by OpenSBI and runs independently of U-Boot
+	  on the primary hart while other harts run U-Boot.
+
 endmenu
