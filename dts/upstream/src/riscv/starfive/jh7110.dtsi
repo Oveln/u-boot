@@ -31,7 +31,7 @@
 			riscv,isa-base = "rv64i";
 			riscv,isa-extensions = "i", "m", "a", "c", "zba", "zbb", "zicntr", "zicsr",
 					       "zifencei", "zihpm";
-			status = "disabled";
+			status = "okay";
 
 			cpu0_intc: interrupt-controller {
 				compatible = "riscv,cpu-intc";
