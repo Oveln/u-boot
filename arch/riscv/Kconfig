@@ -626,7 +626,7 @@ config SPL_OPTEE_LOAD_ADDR
 
 config EMBASSY_PREEMPT_ENTRY
 	hex "Embassy Preempt RTOS entry point address"
-	default 0x41000000
+	default 0xc0000000
 	help
 	  Entry point address for the Embassy Preempt RTOS that runs on HART0.
 	  This RTOS is loaded by OpenSBI and runs independently of U-Boot

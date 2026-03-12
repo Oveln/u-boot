@@ -104,8 +104,10 @@ void __noreturn spl_invoke_opensbi(struct spl_image_info *spl_image)
 	opensbi_info.next_addr = os_entry;
 	opensbi_info.next_mode = FW_DYNAMIC_INFO_NEXT_MODE_S;
 	opensbi_info.options = CONFIG_SPL_OPENSBI_SCRATCH_OPTIONS;
-	opensbi_info.boot_hart = gd->arch.boot_hart;
-
+	// opensbi_info.boot_hart = gd->arch.boot_hart;
+	// hart0不支持A扩展，这里强制hart1作为启动核，后续进入rustsbi
+	opensbi_info.boot_hart = 1;
+	
 	opensbi_entry = (opensbi_entry_t)spl_image->entry_point;
 	invalidate_icache_all();
 
@@ -126,6 +128,6 @@ void __noreturn spl_invoke_opensbi(struct spl_image_info *spl_image)
 	if (ret)
 		hang();
 #endif
-	opensbi_entry(gd->arch.boot_hart, (ulong)spl_image->fdt_addr,
+	opensbi_entry(1, (ulong)spl_image->fdt_addr,
 		      (ulong)&opensbi_info);
 }
