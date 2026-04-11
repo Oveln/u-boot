@@ -5,3 +5,5 @@
 extra-y = start.o
 
 obj-y += cpu.o mtrap.o
+
+obj-$(CONFIG_SPL_RELOCATE) += spl_relocate.o

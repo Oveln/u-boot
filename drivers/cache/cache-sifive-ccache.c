@@ -31,13 +31,18 @@ static int sifive_ccache_enable(struct udevice *dev)
 {
 	struct sifive_ccache *priv = dev_get_priv(dev);
 	u32 config;
-	u32 ways;
+	u32 hw_ways, enable_ways;
 
 	/* Enable all ways of composable cache */
 	config = readl(priv->base + SIFIVE_CCACHE_CONFIG);
-	ways = FIELD_GET(SIFIVE_CCACHE_CONFIG_WAYS, config);
+	hw_ways = FIELD_GET(SIFIVE_CCACHE_CONFIG_WAYS, config);
 
-	writel(ways - 1, priv->base + SIFIVE_CCACHE_WAY_ENABLE);
+	/* Check device tree for max-enabled-ays property */
+	enable_ways = dev_read_u32_default(dev, "sifive,max-enabled-ways", hw_ways);
+	if (enable_ways > hw_ways)
+		enable_ways = hw_ways;
+
+	writel(enable_ways - 1, priv->base + SIFIVE_CCACHE_WAY_ENABLE);
 
 	if (priv->has_cg) {
 		/* enable clock gating bits */

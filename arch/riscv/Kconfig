@@ -624,12 +624,17 @@ config SPL_OPTEE_LOAD_ADDR
 	help
 	  Load address of the OP-TEE binary.
 
-config EMBASSY_PREEMPT_ENTRY
-	hex "Embassy Preempt RTOS entry point address"
-	default 0xc0000000
+config SPL_RELOCATE
+	bool "Enable SPL self-relocation"
+	depends on SPL
 	help
-	  Entry point address for the Embassy Preempt RTOS that runs on HART0.
-	  This RTOS is loaded by OpenSBI and runs independently of U-Boot
-	  on the primary hart while other harts run U-Boot.
+	  Enable SPL self-relocation code. This allows SPL to automatically
+	  relocate itself from the Boot ROM load address to its linked address.
+
+	  For JH7110, Boot ROM loads SPL to 0x8000000, but SPL is linked
+	  to run at 0x8080000. With this option enabled, SPL will automatically
+	  copy itself to 0x8080000 and continue execution there, freeing the
+	  0x8000000~0x8080000 region for other uses (e.g., inter-system
+	  communication).
 
 endmenu

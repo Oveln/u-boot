@@ -81,18 +81,19 @@
 					};
 				};
 
-				embassy_preempt {
+				@embassy-SEQ {
+					fit,operation = "split-elf";     // 启用 ELF 拆分
 					description = "Embassy Preempt OS";
-					type = "firmware";
+					type = "standalone";
 					os = "rtos";
+					arch = "riscv";
 					compression = "none";
-					load = /bits/ 64 <CONFIG_EMBASSY_PREEMPT_ENTRY>;
-					entry = /bits/ 64 <CONFIG_EMBASSY_PREEMPT_ENTRY>;
+					fit,load;    // 自动从 ELF 读取
+					fit,data;    // 自动从 ELF 读取
 
-					embassy_preempt_blob: embassy_preempt {
+					embassy_preempt {
 					};
 				};
-
 #if !defined(CONFIG_OF_BOARD) || defined(CONFIG_MULTI_DTB_FIT)
 				@fdt-SEQ {
 					fit,operation = "gen-fdt-nodes";
@@ -115,18 +116,21 @@
 				conf-1 {
 #endif
 					description = "NAME";
-					firmware = "opensbi";
 #ifdef CONFIG_OPTEE
 #ifdef CONFIG_SPL_LOAD_FIT_OPENSBI_OS_BOOT
-					loadables = "linux", "tee", "embassy_preempt";
+					fit,firmware = "opensbi", "linux", "tee";
+					fit,loadables;
 #else
-					loadables = "uboot", "tee", "embassy_preempt";
+					fit,firmware = "opensbi", "uboot", "tee";
+					fit,loadables;
 #endif
 #else /* !CONFIG_OPTEEE */
 #ifdef CONFIG_SPL_LOAD_FIT_OPENSBI_OS_BOOT
-					loadables = "linux", "embassy_preempt";
+					fit,firmware = "opensbi", "linux";
+					fit,loadables;
 #else
-					loadables = "uboot", "embassy_preempt";
+					fit,firmware = "opensbi", "uboot";
+					fit,loadables;
 #endif
 #endif /* CONFIG_OPTEE */
 
